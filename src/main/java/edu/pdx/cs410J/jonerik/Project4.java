@@ -5,6 +5,9 @@ import edu.pdx.cs410J.web.HttpRequestHelper;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
 
 /**
  * The main class that parses the command line and communicates with the
@@ -15,72 +18,95 @@ public class Project4 {
     public static final String MISSING_ARGS = "Missing command line arguments";
 
     public static void main(String... args) {
-        String hostName = null;
-        String portString = null;
-        String key = null;
-        String value = null;
+        Map<String,String> map = Parser.parseArgs(new ArrayList<>(Arrays.asList(args)));
 
-        for (String arg : args) {
-            if (hostName == null) {
-                hostName = arg;
 
-            } else if ( portString == null) {
-                portString = arg;
+        String hostName = map.get("host");
+        int portString = Integer.parseInt(map.get("port"));
 
-            } else if (key == null) {
-                key = arg;
 
-            } else if (value == null) {
-                value = arg;
-
-            } else {
-                usage("Extraneous command line argument: " + arg);
-            }
+        /*
+        if (Parser.print) {
+            //execute print
         }
 
-        if (hostName == null) {
-            usage( MISSING_ARGS );
-
-        } else if ( portString == null) {
-            usage( "Missing port" );
+        if (Parser.search) {
+            // execute search
         }
+        */
 
-        int port;
-        try {
-            port = Integer.parseInt( portString );
-            
-        } catch (NumberFormatException ex) {
-            usage("Port \"" + portString + "\" must be an integer");
-            return;
-        }
+        //String customer = map.get("customer");
+        //PhoneBillRestClient client = new PhoneBillRestClient();
+        //System.out.println(client);
 
-        PhoneBillRestClient client = new PhoneBillRestClient(hostName, port);
+        //HttpRequestHelper.Response response;
 
-        HttpRequestHelper.Response response;
-        try {
-            if (key == null) {
+        postCall(map);
+        //try {
+
+            //checkResponseCode( HttpURLConnection.HTTP_OK, response);
+            /*
+            if (customer == null) {
                 // Print all key/value pairs
                 response = client.getAllKeysAndValues();
 
-            } else if (value == null) {
+            } else if (map.get(customer) == null) {
                 // Print all values of key
-                response = client.getValues(key);
+                response = client.getValues(map);
 
             } else {
                 // Post the key/value pair
-                response = client.addKeyValuePair(key, value);
+                response = client.postCall(map);
             }
 
-            checkResponseCode( HttpURLConnection.HTTP_OK, response);
+        */
 
+            /*
         } catch ( IOException ex ) {
             error("While contacting server: " + ex);
             return;
         }
 
-        System.out.println(response.getContent());
+        if (response != null) {
+            System.out.println(response.getContent());
+        }
+        */
 
         System.exit(0);
+    }
+
+
+    private static HttpRequestHelper.Response postCall(Map<String, String> map) {
+        String hostName = map.get("host");
+        int port = Integer.parseInt(map.get("port"));
+        //System.out.println(port);
+
+        PhoneCall call = new PhoneCall(map.get("callerNumber"), map.get("calleeNumber"),
+                map.get("startTime"), map.get("endTime"));
+
+        PhoneBill bill = new PhoneBill(map.get("customer"));
+        bill.addPhoneCall(call);
+
+
+        String customer = map.get("customer");
+        PhoneBillRestClient client = new PhoneBillRestClient(hostName, port, customer);
+        HttpRequestHelper.Response response;
+
+        try {
+            response = client.postCall(map);
+            checkResponseCode(HttpURLConnection.HTTP_OK, response);
+            return response;
+        } catch (IOException e) {
+            System.err.println("Err here");
+            e.printStackTrace();
+            return null;
+        }
+
+        // add the customer, bill to the map response = client.addKeyValuePair(//);
+
+
+
+
     }
 
     /**

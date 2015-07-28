@@ -16,7 +16,8 @@ import java.util.Map;
  */
 public class PhoneBillServlet extends HttpServlet
 {
-    private final Map<String, String> data = new HashMap<>();
+    private final Map<String, PhoneBill> bills  = new HashMap<>();
+    private final Map<String, String> data      = new HashMap<>();
 
     /**
      * Handles an HTTP GET request from a client by writing the value of the key
@@ -29,13 +30,23 @@ public class PhoneBillServlet extends HttpServlet
     {
         response.setContentType( "text/plain" );
 
-        String key = getParameter( "key", request );
-        if (key != null) {
-            writeValue(key, response);
+        String customer     = getParameter("customer", request);
 
+        String startTime    = getParameter("startTime", request);
+        String endTime      = getParameter("endTime", request);
+
+        if (customer != null && (startTime == null && endTime == null)){
+            writeValue(customer, response);
         } else {
-            writeAllMappings(response);
+            Map <String, String> map = new HashMap<>();
+            map.put("customer", customer);
+            map.put("startTime", startTime);
+            map.put("endTime", endTime);
         }
+
+        // TODO: Check to make sure all params are there
+        //writeValue(customer, response);
+
     }
 
     /**
@@ -44,30 +55,48 @@ public class PhoneBillServlet extends HttpServlet
      * HTTP response.
      */
     @Override
-    protected void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException
-    {
-        response.setContentType( "text/plain" );
+    protected void doPost( HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, NullPointerException {
+        response.setContentType("text/plain");
 
-        String key = getParameter( "key", request );
-        if (key == null) {
-            missingRequiredParameter( response, "key" );
-            return;
+        Map <String, String> map = setMap(request);
+        PhoneCall call = new PhoneCall (map.get("callerNumber"), map.get("calleeNumber"),
+                map.get("startTime"), map.get("endTime"));
+
+        String name = map.get("customer");
+        PhoneBill bill = bills.get(map.get(name));
+
+
+        if (bill != null) {
+            bill.addPhoneCall(call);
+        } else {
+            bills.put(name, new PhoneBill(name));
+            bills.get(name).addPhoneCall(call);
         }
-
-        String value = getParameter( "value", request );
-        if ( value == null) {
-            missingRequiredParameter( response, "value" );
-            return;
-        }
-
-        this.data.put(key, value);
 
         PrintWriter pw = response.getWriter();
-        pw.println(Messages.mappedKeyValue(key, value));
+        pw.println(bill.toString());
         pw.flush();
 
-        response.setStatus( HttpServletResponse.SC_OK);
+        response.setStatus(HttpServletResponse.SC_OK);
     }
+
+
+    protected Map<String, String> setMap (HttpServletRequest request) {
+        Map <String, String> map = new HashMap<>();
+        String customer = getParameter("customer", request);
+        map.put("customer", customer);
+        String callerNumber = getParameter("callerNumber", request);
+        map.put("callerNumber", callerNumber);
+        String calleeNumber = getParameter("calleeNumber", request);
+        map.put("calleeNumber", calleeNumber);
+        String startTime = getParameter("startTime", request);
+        map.put("startTime", startTime);
+        String endTime = getParameter("endTime", request);
+        map.put("endTime", endTime);
+        return map;
+    }
+
+
 
     /**
      * Writes an error message about a missing parameter to the HTTP response.
@@ -88,18 +117,14 @@ public class PhoneBillServlet extends HttpServlet
      * Writes the value of the given key to the HTTP response.
      *
      * The text of the message is formatted with {@link Messages#getMappingCount(int)}
-     * and {@link Messages#formatKeyValuePair(String, String)}
+     * and {@link Messages#formatKeyValuePair(String, PhoneBill)}
      */
-    private void writeValue( String key, HttpServletResponse response ) throws IOException
+    private void writeValue( String customer, HttpServletResponse response ) throws IOException
     {
-        String value = this.data.get(key);
+        PhoneBill bill = this.bills.get(customer);
 
-        PrintWriter pw = response.getWriter();
-        pw.println(Messages.getMappingCount( value != null ? 1 : 0 ));
-        pw.println(Messages.formatKeyValuePair( key, value ));
-
-        pw.flush();
-
+        PrettyPrinter prettify = new PrettyPrinter(response.getWriter());
+        prettify.dump(bill);
         response.setStatus( HttpServletResponse.SC_OK );
     }
 
@@ -107,14 +132,14 @@ public class PhoneBillServlet extends HttpServlet
      * Writes all of the key/value pairs to the HTTP response.
      *
      * The text of the message is formatted with
-     * {@link Messages#formatKeyValuePair(String, String)}
+     * {@link Messages#formatKeyValuePair(String, PhoneBill)}
      */
     private void writeAllMappings( HttpServletResponse response ) throws IOException
     {
         PrintWriter pw = response.getWriter();
-        pw.println(Messages.getMappingCount( data.size() ));
+        pw.println(Messages.getMappingCount(bills.size()));
 
-        for (Map.Entry<String, String> entry : this.data.entrySet()) {
+        for (Map.Entry<String, PhoneBill> entry : this.bills.entrySet()) {
             pw.println(Messages.formatKeyValuePair(entry.getKey(), entry.getValue()));
         }
 

@@ -32,6 +32,7 @@ public class Project4Test extends InvokeMainTestCase {
         assertThat(out, out, containsString(Messages.getMappingCount(0)));
     }
 
+    /*
     @Test
     public void test3NoValues() {
         String key = "KEY";
@@ -62,4 +63,5 @@ public class Project4Test extends InvokeMainTestCase {
         assertThat(out, out, containsString(Messages.getMappingCount(1)));
         assertThat(out, out, containsString(Messages.formatKeyValuePair(key, value)));
     }
+    */
 }
