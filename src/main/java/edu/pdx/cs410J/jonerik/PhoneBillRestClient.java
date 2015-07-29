@@ -3,10 +3,7 @@ package edu.pdx.cs410J.jonerik;
 import edu.pdx.cs410J.web.HttpRequestHelper;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
-import java.text.MessageFormat;
-import java.net.URLEncoder;
 
 /**
  * A helper class for accessing the rest client.  Note that this class provides
@@ -18,7 +15,7 @@ public class PhoneBillRestClient extends HttpRequestHelper
     private static final String WEB_APP = "phonebill";
     private static final String SERVLET = "calls";
 
-    private final String url;
+    public final String url;
 
 
     /**
@@ -33,22 +30,8 @@ public class PhoneBillRestClient extends HttpRequestHelper
         this.url = String.format( "http://%s:%d/%s/%s?customer=%s", hostName, port, WEB_APP, SERVLET, customer );
     }
 
-
-
-    public static String urlBuilder(Map<String, String> map) {
-
-        String host     = map.get("host");
-        String port     = map.get("port");
-        String customer = map.get("customer");
-
-
-        try {
-            customer = URLEncoder.encode(customer, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            System.err.println("Bad URL");
-        }
-        System.out.println(MessageFormat.format("http://{0}:{1}/{2}/{3}?customer={4}", host, port, WEB_APP, SERVLET, customer));
-        return MessageFormat.format("http://{0}:{1}/{2}/{3}?customer={4}", host, port, WEB_APP, SERVLET, customer);
+    public String returnUrl () {
+        return this.url;
     }
 
     /**
@@ -88,9 +71,9 @@ public class PhoneBillRestClient extends HttpRequestHelper
         String endTime      = map.get("endTime");
         System.out.println(endTime);
 
-        return post( urlBuilder(map), "callerNumber", map.get(callerNumber),
-                "calleeNumber", map.get(calleeNumber), "startTime", map.get(startTime),
-                "endTime", map.get(endTime));
+        return post( this.url, "callerNumber", callerNumber,
+                "calleeNumber", calleeNumber, "startTime", startTime,
+                "endTime", endTime);
     }
 
 

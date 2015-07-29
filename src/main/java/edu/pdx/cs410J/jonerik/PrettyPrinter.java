@@ -32,6 +32,11 @@ public class PrettyPrinter implements PhoneBillDumper {
         this.call = call;
     }
 
+    /**
+     * Created new constructor for Print Writer to integrate
+     * with Servlet
+     * @param pw takes in a PrintWriter pw
+     */
     public PrettyPrinter(PrintWriter pw) {
         this.pw = pw;
     }
@@ -47,6 +52,11 @@ public class PrettyPrinter implements PhoneBillDumper {
 
         String formatString = "%77s";
 
+        pw.write("testing");
+
+        //pw.write(bill.getCustomer());
+
+        /*
 
         pw.write(String.format(formatString, String.valueOf("*** " + bill.getCustomer()) + "'s Phone Bill ***"));
         pw.write("\n\n");
@@ -80,11 +90,16 @@ public class PrettyPrinter implements PhoneBillDumper {
             pw.write(String.format(formatString,  "  " + each.getCaller(), "|", each.getCallee(), "|",
                     each.getStartTimeString(), "|", each.getEndTimeString(), "|",
                     " -> Duration: " + durationHours + " Hours and " + durationMins + " minutes!"));
+                    }
+        */
+
             pw.write("---------------------------------------------------------------------------" +
                     "----------------------------------------------\n");
-        }
 
 
+
+        pw.flush();
+        pw.close();
     }
 
     /**

@@ -31,7 +31,6 @@ public class PhoneBillServlet extends HttpServlet
         response.setContentType( "text/plain" );
 
         String customer     = getParameter("customer", request);
-
         String startTime    = getParameter("startTime", request);
         String endTime      = getParameter("endTime", request);
 
@@ -56,15 +55,16 @@ public class PhoneBillServlet extends HttpServlet
      */
     @Override
     protected void doPost( HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, NullPointerException {
+
         response.setContentType("text/plain");
 
         Map <String, String> map = setMap(request);
+        //System.out.println(map.get("callerNumber"));
         PhoneCall call = new PhoneCall (map.get("callerNumber"), map.get("calleeNumber"),
                 map.get("startTime"), map.get("endTime"));
 
         String name = map.get("customer");
-        PhoneBill bill = bills.get(map.get(name));
-
+        PhoneBill bill = bills.get(name);
 
         if (bill != null) {
             bill.addPhoneCall(call);
@@ -74,7 +74,7 @@ public class PhoneBillServlet extends HttpServlet
         }
 
         PrintWriter pw = response.getWriter();
-        pw.println(bill.toString());
+        //pw.println(bill.toString());
         pw.flush();
 
         response.setStatus(HttpServletResponse.SC_OK);
@@ -121,7 +121,9 @@ public class PhoneBillServlet extends HttpServlet
      */
     private void writeValue( String customer, HttpServletResponse response ) throws IOException
     {
-        PhoneBill bill = this.bills.get(customer);
+        PhoneBill bill = bills.get(customer);
+        //System.out.println("CHECKING HERE");
+        //System.out.println("Customer Name: " + bill.getCustomer());
 
         PrettyPrinter prettify = new PrettyPrinter(response.getWriter());
         prettify.dump(bill);

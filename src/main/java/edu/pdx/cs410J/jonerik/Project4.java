@@ -90,6 +90,7 @@ public class Project4 {
 
         String customer = map.get("customer");
         PhoneBillRestClient client = new PhoneBillRestClient(hostName, port, customer);
+        //System.out.println(client.returnUrl());
         HttpRequestHelper.Response response;
 
         try {
@@ -98,7 +99,7 @@ public class Project4 {
             return response;
         } catch (IOException e) {
             System.err.println("Err here");
-            e.printStackTrace();
+            //e.printStackTrace();
             return null;
         }
 
