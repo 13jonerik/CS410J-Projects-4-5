@@ -57,8 +57,8 @@ public class PhoneBillServlet extends HttpServlet
     }
 
     /**
-     * Handles an HTTP POST request by storing the key/value pair specified by the
-     * "key" and "value" request parameters.  It writes the key/value pair to the
+     * Handles an HTTP POST request by storing the phonecall specified by the
+     * call information request parameters.  It writes the phonecall  to the
      * HTTP response.
      */
     @Override
@@ -89,6 +89,9 @@ public class PhoneBillServlet extends HttpServlet
     }
 
 
+    /**
+     * Simple helper function to make a local map to be used in doPost and doGet
+     */
     protected Map<String, String> setMap (HttpServletRequest request) {
         Map <String, String> map = new HashMap<>();
         String customer = getParameter("customer", request);

@@ -34,8 +34,10 @@ public class Project4 {
             PhoneCall call = new PhoneCall(map.get("callerNumber"), map.get("calleeNumber"),
                     map.get("startTime"), map.get("endTime"));
             System.out.println(call.toString());
+
         }
 
+        // Search functionality broken, stubbed out
         /*
         if (Parser.search) {
             // execute search
@@ -45,7 +47,15 @@ public class Project4 {
         System.exit(0);
     }
 
-
+    /**
+     * Post a call onto the server. The call comes from the command line
+     * and lives in a local Map <String, String>. Create a phonecall and a
+     * bill, then create an instance of the rest client, which creates a
+     * corresponding URL and posts it to that server. Error out if there
+     * is no connection to the server.
+     * @param map local map of call info
+     * @return return the response from server
+     */
     private static HttpRequestHelper.Response postCall(Map<String, String> map) {
         HttpRequestHelper.Response response;
         String hostName = map.get("host");
@@ -90,6 +100,9 @@ public class Project4 {
         }
     }
 
+    /**
+     * Simple error message helper
+     */
     private static void error( String message )
     {
         PrintStream err = System.err;

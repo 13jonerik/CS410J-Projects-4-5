@@ -24,12 +24,17 @@ public class PhoneBillRestClient extends HttpRequestHelper
      * @param port The port
      */
 
-
+    /**
+     * Constructor when the command line is specified to add a call to the server.
+     */
     public PhoneBillRestClient( String hostName, int port, String customer)
     {
         this.url = String.format( "http://%s:%d/%s/%s?customer=%s", hostName, port, WEB_APP, SERVLET, customer );
     }
 
+    /**
+     * Constructor for executing a search, creates a URL for the search to dump to.
+     */
     public PhoneBillRestClient( String hostName, int port, String customer, String startTime, String endTime) {
         this.url = String.format( "http://%s:%d/%s/%s?customer=%s&startTime=%s&endTime=%s",
                 hostName, port, WEB_APP, SERVLET, customer, startTime, endTime);
@@ -58,6 +63,9 @@ public class PhoneBillRestClient extends HttpRequestHelper
     }
 
 
+    /**
+     * Add a call to the url using the helper function post that occurs in the servlet.
+     */
     public Response addCall(Map<String, String> map) throws IOException {
 
         String customer     = map.get("customer");
