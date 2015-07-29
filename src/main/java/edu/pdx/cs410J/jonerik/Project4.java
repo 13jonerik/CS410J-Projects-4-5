@@ -20,16 +20,26 @@ public class Project4 {
     public static void main(String... args) {
         Map<String,String> map = Parser.parseArgs(new ArrayList<>(Arrays.asList(args)));
 
+        //String hostName = map.get("host");
+        //int portString = Integer.parseInt(map.get("port"));
+        //System.out.println(Parser.port);
 
-        String hostName = map.get("host");
-        int portString = Integer.parseInt(map.get("port"));
-
-
-        /*
-        if (Parser.print) {
-            //execute print
+        if ((Parser.host && !Parser.port) || (!Parser.host && Parser.port)) {
+            System.err.println("Host and Port options must both be specified together. Command line" +
+                    "contains one without the other. Check arguments and try again.");
+            System.exit(1);
         }
 
+        if (Parser.print) {
+            //execute print
+            PhoneCall call = new PhoneCall(map.get("callerNumber"), map.get("calleeNumber"),
+                    map.get("startTime"), map.get("endTime"));
+            System.out.println(call.toString());
+        }
+
+        postCall(map);
+
+        /*
         if (Parser.search) {
             // execute search
         }
@@ -41,32 +51,28 @@ public class Project4 {
 
         //HttpRequestHelper.Response response;
 
-        postCall(map);
-        //try {
 
-            //checkResponseCode( HttpURLConnection.HTTP_OK, response);
-            /*
+
+        //checkResponseCode( HttpURLConnection.HTTP_OK, response);
+        /*
             if (customer == null) {
                 // Print all key/value pairs
-                response = client.getAllKeysAndValues();
+                //response = client.getAllKeysAndValues();
 
             } else if (map.get(customer) == null) {
                 // Print all values of key
-                response = client.getValues(map);
+                //response = client.getValues(map);
 
             } else {
                 // Post the key/value pair
-                response = client.postCall(map);
-            }
 
+                //response = client.postCall(map);
+            }
         */
 
-            /*
-        } catch ( IOException ex ) {
-            error("While contacting server: " + ex);
-            return;
-        }
 
+
+        /*
         if (response != null) {
             System.out.println(response.getContent());
         }
@@ -96,12 +102,16 @@ public class Project4 {
         try {
             response = client.postCall(map);
             checkResponseCode(HttpURLConnection.HTTP_OK, response);
+            //client.getValues(map);
+            //client.getAllKeysAndValues();
             return response;
         } catch (IOException e) {
             System.err.println("Err here");
             //e.printStackTrace();
             return null;
         }
+
+
 
         // add the customer, bill to the map response = client.addKeyValuePair(//);
 

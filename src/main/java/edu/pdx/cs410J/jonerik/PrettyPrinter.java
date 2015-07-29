@@ -4,13 +4,11 @@ import edu.pdx.cs410J.AbstractPhoneBill;
 import edu.pdx.cs410J.AbstractPhoneCall;
 import edu.pdx.cs410J.PhoneBillDumper;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.List;
-import java.lang.String;
 import java.util.concurrent.TimeUnit;
-import java.io.PrintWriter;
 
 
 /**
@@ -20,25 +18,25 @@ import java.io.PrintWriter;
  */
 public class PrettyPrinter implements PhoneBillDumper {
 
-    private DataOutputStream call;
-    private PrintWriter pw;
+    //private DataOutputStream call;
+    private PrintWriter call;
 
     /**
      * Constructor for the PrettyPrinter
      * @param call takes in a stream from
      * Project3 and uses the stream in dump
      */
-    public PrettyPrinter(DataOutputStream call) {
-        this.call = call;
-    }
+    //public PrettyPrinter(DataOutputStream call) {
+    //    this.call = call;
+    //}
 
     /**
      * Created new constructor for Print Writer to integrate
      * with Servlet
-     * @param pw takes in a PrintWriter pw
+     * @param pretty takes in a PrintWriter pw
      */
-    public PrettyPrinter(PrintWriter pw) {
-        this.pw = pw;
+    public PrettyPrinter(PrintWriter pretty) {
+        this.call = pretty;
     }
 
     /**
@@ -49,17 +47,16 @@ public class PrettyPrinter implements PhoneBillDumper {
      */
     public void dump(AbstractPhoneBill bill) throws IOException {
 
-
+        PhoneBill bill1 = (PhoneBill) bill;
         String formatString = "%77s";
 
-        pw.write("testing");
+        //call.write("testing\n");
 
-        //pw.write(bill.getCustomer());
+        //String customer = bill1.getCustomer();
+        //call.write(customer);
 
-        /*
-
-        pw.write(String.format(formatString, String.valueOf("*** " + bill.getCustomer()) + "'s Phone Bill ***"));
-        pw.write("\n\n");
+        call.write(String.format(formatString, String.valueOf("*** " + bill1.getCustomer()) + "'s Phone Bill ***"));
+        call.write("\n\n");
 
         List<PhoneCall> temp = (List<PhoneCall>) bill.getPhoneCalls();
         //int length = temp.size();
@@ -72,8 +69,8 @@ public class PrettyPrinter implements PhoneBillDumper {
 
         formatString = "%-15s %-5s %-10s %-5s %-16s %-6s %-15s %-18s %s%n";
 
-        pw.write(String.format(formatString, "    Caller", "|", "Callee", "|", "Start Time", "|", "End Time", "|", "Duration"));
-        pw.write("-------------------------------------------------------"
+        call.write(String.format(formatString, "    Caller", "|", "Callee", "|", "Start Time", "|", "End Time", "|", "Duration"));
+        call.write("-------------------------------------------------------"
                 + "------------------------------------------------------------------\n");
 
 
@@ -87,19 +84,17 @@ public class PrettyPrinter implements PhoneBillDumper {
             durationMins = durationMins % 60;
 
 
-            pw.write(String.format(formatString,  "  " + each.getCaller(), "|", each.getCallee(), "|",
+            call.write(String.format(formatString, "  " + each.getCaller(), "|", each.getCallee(), "|",
                     each.getStartTimeString(), "|", each.getEndTimeString(), "|",
                     " -> Duration: " + durationHours + " Hours and " + durationMins + " minutes!"));
                     }
-        */
 
-            pw.write("---------------------------------------------------------------------------" +
+
+            call.write("---------------------------------------------------------------------------" +
                     "----------------------------------------------\n");
 
-
-
-        pw.flush();
-        pw.close();
+        call.flush();
+        call.close();
     }
 
     /**
@@ -110,10 +105,12 @@ public class PrettyPrinter implements PhoneBillDumper {
 
         String formatString = "%77s";
 
-        Print(String.format(formatString, String.valueOf("*** " + bill.getCustomer()) + "'s Phone Bill ***"));
+        PhoneBill bill1 = (PhoneBill) bill;
+
+        Print(String.format(formatString, String.valueOf("*** " + bill1.getCustomer()) + "'s Phone Bill ***"));
         Print("\n\n");
 
-        List<PhoneCall> temp = (List<PhoneCall>) bill.getPhoneCalls();
+        List<PhoneCall> temp = (List<PhoneCall>) bill1.getPhoneCalls();
 
         Collections.sort(temp);
         int length = temp.size();

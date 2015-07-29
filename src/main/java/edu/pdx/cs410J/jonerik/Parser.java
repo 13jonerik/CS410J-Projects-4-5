@@ -18,10 +18,12 @@ public class Parser {
     public static String hostOption     = "-host";
     public static String portOption     = "-port";
     public static String printOption    = "-print";
-    public static boolean print         = false;
     public static String readMeOption   = "-README";
     public static String searchOption   = "-search";
+    public static boolean print         = false;
     public static boolean search        = false;
+    public static boolean host          = false;
+    public static boolean port          = false;
 
 
     public static Map<String, String> parseArgs (ArrayList <String> argList) {
@@ -51,17 +53,18 @@ public class Parser {
 
     public static ArrayList setHost(Map<String, String> map, ArrayList<String> list) {
         if (list.contains(hostOption)) {
+            host = true;
             int index = list.indexOf(hostOption) + 1;
             map.put("host", list.get(index));
             list.remove(index);
             list.remove(index - 1);
         }
 
-        else {
-            Messages.missingRequiredParameter("Host");
+        //else {
+            //Messages.missingRequiredParameter("Host");
             //System.err.println("** Must provide a valid host name argument");
-            System.exit(1);
-        }
+            //System.exit(1);
+        //}
 
         return list;
 
@@ -69,17 +72,19 @@ public class Parser {
 
     public static ArrayList setPort(Map<String, String> map, ArrayList<String> list) {
         if (list.contains(portOption)) {
+            port = true;
             int index = list.indexOf(portOption) + 1;
             map.put("port", list.get(index));
             list.remove(index);
             list.remove(index - 1);
         }
 
+        /*
         else {
             Messages.missingRequiredParameter("Port");
             //System.err.println("** Must provide a valid port name argument");
             System.exit(1);
-        }
+        }*/
 
         return list;
 
@@ -171,21 +176,23 @@ public class Parser {
 
         System.out.println("\nREADME:\n\n" +
                         "Jon-Erik Svenson\n" +
-                        "Phone Bill Application for Project 1 version 1.0. " + currDate.format(date) + "\n\n" +
+                        "Phone Bill Application for Project 4 version 1.0. " + currDate.format(date) + "\n\n" +
                         "This application is designed to record a call to a customers phone bill using\n" +
                         "command line arguments to pass necessary information. The main functionality\n" +
-                        "in this version is parsing and validating each of the arguments to ensure a valid\n" +
-                        "phone call. The order of the arguments and the corresponding types are as follows:\n\n" +
+                        "in this version is parsing and validating each of the arguments and putting it on\n" +
+                        "a server with REST-ful web services functionality.\n\n" +
+                        "The order of the arguments and the corresponding types are as follows:\n\n" +
                         "   customer:           Person whose phone bill we’re modeling\n" +
                         "   callerNumber:       Phone number of caller\n" +
                         "   calleeNumber:       Phone number of person who was called\n" +
-                        "   startTime:          Date and time call began (24-hour time)\n" +
-                        "   endTime:            Date and time call ended (24-hour time)\n" +
+                        "   startTime:          Date and time call began (12-hour time)\n" +
+                        "   endTime:            Date and time call ended (12-hour time)\n" +
                         "   options are (options may appear in any order):\n" +
-                        "   -textFile file      where to read/write the phone bill\n" +
+                        "   -host hostName      The host of the server application\n" +
+                        "   -port portString    The port in which to connect the server\n" +
                         "   -print:             Prints a description of the new phone call\n" +
                         "   -README:            Prints a README for this project and exits\n" +
-                        "   Date and time should be in the format: mm/dd/yyyy hh:mm"
+                        "   Date and time should be in the format: mm/dd/yyyy hh:mm am/pm"
         );
 
     }

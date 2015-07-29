@@ -15,7 +15,7 @@ public class PhoneBillRestClient extends HttpRequestHelper
     private static final String WEB_APP = "phonebill";
     private static final String SERVLET = "calls";
 
-    public final String url;
+    private final String url;
 
 
     /**
@@ -30,9 +30,12 @@ public class PhoneBillRestClient extends HttpRequestHelper
         this.url = String.format( "http://%s:%d/%s/%s?customer=%s", hostName, port, WEB_APP, SERVLET, customer );
     }
 
+
+    /*
     public String returnUrl () {
         return this.url;
     }
+    */
 
     /**
      * Returns all keys and values from the server

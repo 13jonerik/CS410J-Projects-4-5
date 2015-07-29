@@ -36,6 +36,7 @@ public class PhoneBillServlet extends HttpServlet
 
         if (customer != null && (startTime == null && endTime == null)){
             writeValue(customer, response);
+            return;
         } else {
             Map <String, String> map = new HashMap<>();
             map.put("customer", customer);
@@ -43,8 +44,14 @@ public class PhoneBillServlet extends HttpServlet
             map.put("endTime", endTime);
         }
 
+        try {
+            writeAllMappings(response);
+        } catch ( IOException e ) {
+            System.err.println("ERROR IN WRITE ALL MAPPINGS");
+        }
+
         // TODO: Check to make sure all params are there
-        //writeValue(customer, response);
+        writeValue(customer, response);
 
     }
 
@@ -74,7 +81,7 @@ public class PhoneBillServlet extends HttpServlet
         }
 
         PrintWriter pw = response.getWriter();
-        //pw.println(bill.toString());
+        pw.println(bill != null ? bill.toString() : null);
         pw.flush();
 
         response.setStatus(HttpServletResponse.SC_OK);
@@ -123,7 +130,7 @@ public class PhoneBillServlet extends HttpServlet
     {
         PhoneBill bill = bills.get(customer);
         //System.out.println("CHECKING HERE");
-        //System.out.println("Customer Name: " + bill.getCustomer());
+        System.out.println("Customer Name: " + bill.getCustomer());
 
         PrettyPrinter prettify = new PrettyPrinter(response.getWriter());
         prettify.dump(bill);
