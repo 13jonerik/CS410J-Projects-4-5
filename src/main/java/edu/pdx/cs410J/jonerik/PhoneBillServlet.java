@@ -17,7 +17,7 @@ import java.util.Map;
 public class PhoneBillServlet extends HttpServlet
 {
     private final Map<String, PhoneBill> bills  = new HashMap<>();
-    private final Map<String, String> data      = new HashMap<>();
+    //private final Map<String, String> data      = new HashMap<>();
 
     /**
      * Handles an HTTP GET request from a client by writing the value of the key
@@ -30,6 +30,7 @@ public class PhoneBillServlet extends HttpServlet
     {
         response.setContentType( "text/plain" );
 
+        //System.out.println("Here?");
         String customer     = getParameter("customer", request);
         String startTime    = getParameter("startTime", request);
         String endTime      = getParameter("endTime", request);
@@ -66,7 +67,7 @@ public class PhoneBillServlet extends HttpServlet
         response.setContentType("text/plain");
 
         Map <String, String> map = setMap(request);
-        //System.out.println(map.get("callerNumber"));
+
         PhoneCall call = new PhoneCall (map.get("callerNumber"), map.get("calleeNumber"),
                 map.get("startTime"), map.get("endTime"));
 
@@ -130,7 +131,7 @@ public class PhoneBillServlet extends HttpServlet
     {
         PhoneBill bill = bills.get(customer);
         //System.out.println("CHECKING HERE");
-        System.out.println("Customer Name: " + bill.getCustomer());
+        //System.out.println("Customer Name: " + bill.getCustomer());
 
         PrettyPrinter prettify = new PrettyPrinter(response.getWriter());
         prettify.dump(bill);

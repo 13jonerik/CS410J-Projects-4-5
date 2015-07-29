@@ -20,14 +20,13 @@ public class Project4 {
     public static void main(String... args) {
         Map<String,String> map = Parser.parseArgs(new ArrayList<>(Arrays.asList(args)));
 
-        //String hostName = map.get("host");
-        //int portString = Integer.parseInt(map.get("port"));
-        //System.out.println(Parser.port);
-
         if ((Parser.host && !Parser.port) || (!Parser.host && Parser.port)) {
             System.err.println("Host and Port options must both be specified together. Command line" +
                     "contains one without the other. Check arguments and try again.");
             System.exit(1);
+        } else if (Parser.host && Parser.port) {
+            //execute post
+            postCall(map);
         }
 
         if (Parser.print) {
@@ -37,44 +36,9 @@ public class Project4 {
             System.out.println(call.toString());
         }
 
-        postCall(map);
-
         /*
         if (Parser.search) {
             // execute search
-        }
-        */
-
-        //String customer = map.get("customer");
-        //PhoneBillRestClient client = new PhoneBillRestClient();
-        //System.out.println(client);
-
-        //HttpRequestHelper.Response response;
-
-
-
-        //checkResponseCode( HttpURLConnection.HTTP_OK, response);
-        /*
-            if (customer == null) {
-                // Print all key/value pairs
-                //response = client.getAllKeysAndValues();
-
-            } else if (map.get(customer) == null) {
-                // Print all values of key
-                //response = client.getValues(map);
-
-            } else {
-                // Post the key/value pair
-
-                //response = client.postCall(map);
-            }
-        */
-
-
-
-        /*
-        if (response != null) {
-            System.out.println(response.getContent());
         }
         */
 
@@ -83,6 +47,7 @@ public class Project4 {
 
 
     private static HttpRequestHelper.Response postCall(Map<String, String> map) {
+        HttpRequestHelper.Response response;
         String hostName = map.get("host");
         int port = Integer.parseInt(map.get("port"));
         //System.out.println(port);
@@ -93,30 +58,22 @@ public class Project4 {
         PhoneBill bill = new PhoneBill(map.get("customer"));
         bill.addPhoneCall(call);
 
-
         String customer = map.get("customer");
         PhoneBillRestClient client = new PhoneBillRestClient(hostName, port, customer);
         //System.out.println(client.returnUrl());
-        HttpRequestHelper.Response response;
+
 
         try {
-            response = client.postCall(map);
+            response = client.addCall(map);
             checkResponseCode(HttpURLConnection.HTTP_OK, response);
             //client.getValues(map);
             //client.getAllKeysAndValues();
             return response;
         } catch (IOException e) {
-            System.err.println("Err here");
-            //e.printStackTrace();
+            System.err.println("** Connection to server could not be established. Please" +
+                    " check connection and try running again.");
             return null;
         }
-
-
-
-        // add the customer, bill to the map response = client.addKeyValuePair(//);
-
-
-
 
     }
 

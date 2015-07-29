@@ -30,6 +30,10 @@ public class PhoneBillRestClient extends HttpRequestHelper
         this.url = String.format( "http://%s:%d/%s/%s?customer=%s", hostName, port, WEB_APP, SERVLET, customer );
     }
 
+    public PhoneBillRestClient( String hostName, int port, String customer, String startTime, String endTime) {
+        this.url = String.format( "http://%s:%d/%s/%s?customer=%s&startTime=%s&endTime=%s",
+                hostName, port, WEB_APP, SERVLET, customer, startTime, endTime);
+    }
 
     /*
     public String returnUrl () {
@@ -54,25 +58,18 @@ public class PhoneBillRestClient extends HttpRequestHelper
     }
 
 
-    /*
-    public Response addKeyValuePair( Map <String, String> map ) throws IOException {
-        String customer =
-        return post(this.url, "key", key, "value", value);
-    }
-    */
-
-    public Response postCall(Map<String, String> map) throws IOException {
+    public Response addCall(Map<String, String> map) throws IOException {
 
         String customer     = map.get("customer");
-        System.out.println(customer);
+        //System.out.println(customer);
         String callerNumber = map.get("callerNumber");
-        System.out.println(callerNumber);
+        //System.out.println(callerNumber);
         String calleeNumber = map.get("calleeNumber");
-        System.out.println(calleeNumber);
+        //System.out.println(calleeNumber);
         String startTime    = map.get("startTime");
-        System.out.println(startTime);
+        //System.out.println(startTime);
         String endTime      = map.get("endTime");
-        System.out.println(endTime);
+        //System.out.println(endTime);
 
         return post( this.url, "callerNumber", callerNumber,
                 "calleeNumber", calleeNumber, "startTime", startTime,

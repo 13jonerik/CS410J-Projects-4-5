@@ -60,12 +60,6 @@ public class Parser {
             list.remove(index - 1);
         }
 
-        //else {
-            //Messages.missingRequiredParameter("Host");
-            //System.err.println("** Must provide a valid host name argument");
-            //System.exit(1);
-        //}
-
         return list;
 
     }
@@ -78,13 +72,6 @@ public class Parser {
             list.remove(index);
             list.remove(index - 1);
         }
-
-        /*
-        else {
-            Messages.missingRequiredParameter("Port");
-            //System.err.println("** Must provide a valid port name argument");
-            System.exit(1);
-        }*/
 
         return list;
 
@@ -149,19 +136,19 @@ public class Parser {
         String endTime = callInfo.get(i++) + " " + callInfo.get(i++) + " " + callInfo.get(i);
 
         if (!customer.matches("[a-zA-Z\\s*' - - ! @ # $ % ^ & * ? 1 2 3 4 5 6 7 8 9 0 , .]+")) {
-            System.err.println("Customer Name Invalid");
+            System.err.println("** Customer Name Invalid");
             System.exit(1);
         } else if (!callerNumber.matches("[0-9]{3}[-][0-9]{3}[-][0-9]{4}")) {
-            System.err.println("Caller Number Invalid");
+            System.err.println("** Caller Number Invalid");
             System.exit(1);
         } else if (!calleeNumber.matches("[0-9]{3}[-][0-9]{3}[-][0-9]{4}")) {
-            System.err.println("Callee Number Invalid");
+            System.err.println("** Callee Number Invalid");
             System.exit(1);
         } else if (!startTime.matches("(0?[1-9]|1[012])/(0?[1-9]|[12][0-9]|3[01])/[0-9]{2}([0-9]{2})?[\\s*][0-9][0-2]{0,1}[:][0-5][0-9][\\s*]((A|a|P|p))(M|m)")) {
-            System.err.println("Start Time Invalid");
+            System.err.println("** Start Time Invalid");
             System.exit(1);
         } else if (!endTime.matches("(0?[1-9]|1[012])/(0?[1-9]|[12][0-9]|3[01])/[0-9]{2}([0-9]{2})?[\\s*][0-9][0-2]{0,1}[:][0-5][0-9][\\s*]((A|a|P|p))(M|m)")) {
-            System.err.println("End Time Invalid");
+            System.err.println("** End Time Invalid");
             System.exit(1);
         }
 
@@ -188,8 +175,8 @@ public class Parser {
                         "   startTime:          Date and time call began (12-hour time)\n" +
                         "   endTime:            Date and time call ended (12-hour time)\n" +
                         "   options are (options may appear in any order):\n" +
-                        "   -host hostName      The host of the server application\n" +
-                        "   -port portString    The port in which to connect the server\n" +
+                        "   -host hostName      The host computer that the server runs\n" +
+                        "   -port portString    The port in which server is listening\n" +
                         "   -print:             Prints a description of the new phone call\n" +
                         "   -README:            Prints a README for this project and exits\n" +
                         "   Date and time should be in the format: mm/dd/yyyy hh:mm am/pm"
